@@ -45,6 +45,7 @@ const slot = (day: number, hour: number): TimeSlot => `${day}-${hour}`;
 
 // ─── Fake initial data ────────────────────────────────────────────────────────
 
+// 假資料：三人皆有「週三 9–11」共同空閒，方便展示
 const INITIAL_MEMBERS: Member[] = [
   {
     id: "me",
@@ -52,10 +53,10 @@ const INITIAL_MEMBERS: Member[] = [
     color: "bg-blue-500",
     availability: [
       slot(0, 9), slot(0, 10), slot(0, 11),          // Mon 9–12
-      slot(0, 14), slot(0, 15), slot(0, 16),          // Mon 14–17
-      slot(2, 9),  slot(2, 10), slot(2, 11),          // Wed 9–12
-      slot(3, 14), slot(3, 15), slot(3, 16),          // Thu 14–17
-      slot(4, 9),  slot(4, 10),                       // Fri 9–11
+      slot(0, 14), slot(0, 15), slot(0, 16),         // Mon 14–17
+      slot(2, 9),  slot(2, 10), slot(2, 11),         // Wed 9–12（共同）
+      slot(3, 14), slot(3, 15), slot(3, 16),         // Thu 14–17
+      slot(4, 9),  slot(4, 10),                      // Fri 9–11
     ],
   },
   {
@@ -63,9 +64,10 @@ const INITIAL_MEMBERS: Member[] = [
     name: "小梁",
     color: "bg-green-500",
     availability: [
-      slot(0, 9),  slot(0, 10), slot(0, 11),          // Mon 9–12
-      slot(2, 14), slot(2, 15), slot(2, 16),          // Wed 14–17
-      slot(4, 9),  slot(4, 10),                       // Fri 9–11
+      slot(0, 9),  slot(0, 10), slot(0, 11),         // Mon 9–12
+      slot(2, 9),  slot(2, 10), slot(2, 11),         // Wed 9–12（共同）
+      slot(2, 14), slot(2, 15), slot(2, 16),         // Wed 14–17
+      slot(4, 9),  slot(4, 10),                      // Fri 9–11
     ],
   },
   {
@@ -73,9 +75,9 @@ const INITIAL_MEMBERS: Member[] = [
     name: "盧盧",
     color: "bg-purple-500",
     availability: [
-      slot(1, 10), slot(1, 11), slot(1, 12),          // Tue 10–13
-      slot(2, 9),  slot(2, 10), slot(2, 11),          // Wed 9–12
-      slot(3, 14), slot(3, 15),                       // Thu 14–16
+      slot(1, 10), slot(1, 11), slot(1, 12),         // Tue 10–13
+      slot(2, 9),  slot(2, 10), slot(2, 11),         // Wed 9–12（共同）
+      slot(3, 14), slot(3, 15),                      // Thu 14–16
     ],
   },
 ];
