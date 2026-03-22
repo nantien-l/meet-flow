@@ -228,6 +228,11 @@ export default function MeetFlow() {
   const [open, setOpen] = useState(false);
   const [viewId, setViewId] = useState("xiao-liang");
 
+  // === 新增：控制「發起會議確認」彈窗的 state ===
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedSlotStr, setSelectedSlotStr] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+
   const me = members.find((m) => m.id === "me")!;
   const others = members.filter((m) => m.id !== "me");
   const viewing = members.find((m) => m.id === viewId) ?? others[0];
@@ -483,18 +488,65 @@ export default function MeetFlow() {
                 {commonSlots.map((s) => {
                   const [d, h] = s.split("-").map(Number);
                   return (
-                    <div
+                    <button
                       key={s}
-                      className="text-sm px-3 py-2 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 dark:bg-emerald-950 dark:border-emerald-800 dark:text-emerald-200"
+                      onClick={() => {
+                        setSelectedSlotStr(`${DAYS[d]} ${h}:00–${h + 1}:00`);
+                        setIsModalOpen(true);
+                      }}
+                      className="text-sm px-3 py-2 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 hover:bg-emerald-100 hover:scale-105 transition-all text-left dark:bg-emerald-950 dark:border-emerald-800 dark:text-emerald-200 font-medium cursor-pointer"
                     >
                       {DAYS[d]} {h}:00–{h + 1}:00
-                    </div>
+                    </button>
                   );
                 })}
               </div>
             )}
           </TabsContent>
         </Tabs>
+            {/* ── 加分功能：發起會議確認 Modal ── */}
+            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>{!isSuccess ? "確認發起會議？" : "發送成功！"}</DialogTitle>
+                </DialogHeader>
+                
+                {!isSuccess ? (
+                  <div className="flex flex-col gap-4 mt-2">
+                    <p className="text-sm text-muted-foreground">
+                      即將為所有有空的成員建立會議，並透過 Message 發送互動式邀請卡片。
+                    </p>
+                    <div className="bg-muted p-3 rounded-md text-sm flex flex-col gap-2">
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold w-12 text-muted-foreground">時間：</span>
+                        <Badge className="bg-emerald-500 hover:bg-emerald-600 border-transparent text-white">{selectedSlotStr}</Badge>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold w-12 text-muted-foreground">邀請：</span>
+                        <span className="font-medium">我、小梁、盧盧</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-end gap-2 mt-4">
+                      <Button variant="outline" onClick={() => setIsModalOpen(false)}>取消</Button>
+                      <Button onClick={() => {
+                        setIsSuccess(true);
+                        setTimeout(() => {
+                          setIsModalOpen(false);
+                          setIsSuccess(false);
+                        }, 2500); // 2.5秒後自動關閉
+                      }}>確認並發送 Message 邀請</Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="py-8 flex flex-col items-center justify-center gap-3">
+                    <div className="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mb-2">
+                      <CalendarCheck className="w-7 h-7" />
+                    </div>
+                    <p className="text-emerald-600 font-bold text-lg">已成功推播至成員的 Message！</p>
+                  </div>
+                )}
+              </DialogContent>
+            </Dialog>
       </main>
     </div>
   );
